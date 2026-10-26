@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: pytest -q
+      - name: 評価の再現 (コミット済みキャッシュのみ使用, API は呼ばない)
+        run: |
+          glossary-mt eval data/test --glossary data/glossary.csv --model claude-sonnet-5-5 --offline --report eval-test.md
+          python scripts/compare_models.py > model-comparison.md
+          diff model-comparison.md docs/model-comparison.md
+      - name: 翻訳の再現 (Markdown / Excel / PowerPoint)
+        run: |
+          glossary-mt translate examples/proposal.ja.pptx data/test/04_batch_runbook.ja.md data/test/05_parameter_sheet.ja.xlsx \
+            --to ko --glossary data/glossary.csv --model claude-haiku-5-5 --offline --no-tm --out-dir out --strict
+      - name: 評価結果をジョブサマリーに表示
+        if: matrix.python-version == '3.12'
+        run: cat model-comparison.md >> "$GITHUB_STEP_SUMMARY"

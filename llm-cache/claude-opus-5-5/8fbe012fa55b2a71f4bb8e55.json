@@ -1,0 +1,40 @@
+{
+  "model": "claude-opus-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1294,
+    "output_tokens": 139
+  },
+  "result": {
+    "translations": [
+      {
+        "id": "u31",
+        "text": "날짜"
+      },
+      {
+        "id": "u32",
+        "text": "내용"
+      },
+      {
+        "id": "u33",
+        "text": "작성자"
+      },
+      {
+        "id": "u34",
+        "text": "초판 작성"
+      },
+      {
+        "id": "u35",
+        "text": "다카하시"
+      },
+      {
+        "id": "u36",
+        "text": "임계치 재검토（CPU 80% → 90%）"
+      },
+      {
+        "id": "u37",
+        "text": "사토"
+      }
+    ]
+  }
+}
